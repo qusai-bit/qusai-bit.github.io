@@ -342,7 +342,9 @@
     setStatus('Fetching&hellip;', 'loading');
 
     try {
-      const res = await fetch('https://api.cobalt.tools/api/json', {
+      const cobaltUrl = 'https://api.cobalt.tools/api/json';
+      const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(cobaltUrl);
+      const res = await fetch(proxyUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ url, vCodec: 'h264', vQuality: 'max', isAudioOnly: false })
