@@ -21,7 +21,6 @@
       --accent-bright: #5eead4;
       --accent-dim: rgba(45,212,191,0.12);
       --accent-x: #67e8f9;
-      --accent-yt: #f87171;
       --font-display: 'Syne', sans-serif;
       --font-mono: 'DM Mono', monospace;
     }
@@ -30,8 +29,8 @@
     .container { width: 100%; max-width: 600px; }
     .eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; opacity: 0.8; }
     .title { font-family: var(--font-display); font-size: clamp(48px, 14vw, 80px); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
-    .title .yt { color: var(--accent-yt); }
     .title .i { color: var(--accent-bright); }
+    .title .g { color: var(--accent-bright); }
     .title .x { color: var(--accent-x); }
     .subtitle { font-size: 13px; color: var(--muted); margin-top: 10px; letter-spacing: 0.04em; }
     .subtitle span { color: var(--text); }
@@ -43,7 +42,6 @@
     .tab:hover { color: var(--text); }
     .tab.active { color: var(--accent-bright); border-bottom-color: var(--accent); }
     .tab.active.x-tab { color: var(--accent-x); border-bottom-color: var(--accent-x); }
-    .tab.active.yt-tab { color: var(--accent-yt); border-bottom-color: var(--accent-yt); }
     .input-group { display: flex; gap: 8px; margin-bottom: 1rem; }
     .url-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-mono); font-size: 13px; padding: 12px 16px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
     .url-input::placeholder { color: var(--muted); }
@@ -52,11 +50,6 @@
     .fetch-btn:hover { background: var(--accent-bright); }
     .fetch-btn:active { transform: scale(0.97); }
     .fetch-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .yt-options { display: none; gap: 8px; margin-bottom: 1rem; align-items: center; flex-wrap: wrap; }
-    .yt-options.visible { display: flex; }
-    .yt-options label { font-size: 12px; color: var(--muted); }
-    .yt-options select { font-family: var(--font-mono); font-size: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 6px 10px; outline: none; cursor: pointer; }
-    .yt-options select:focus { border-color: var(--accent-yt); }
     .status { font-size: 12px; color: var(--muted); margin-bottom: 0.75rem; display: none; align-items: center; gap: 8px; }
     .status.visible { display: flex; }
     .status.error { color: #f87171; }
@@ -64,14 +57,10 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .result-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; margin-bottom: 0.75rem; animation: fadeUp 0.25s ease; position: relative; overflow: hidden; }
     .result-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-x)); }
-    .result-card.yt::before { background: linear-gradient(90deg, var(--accent-yt), #fbbf24); }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     .result-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; opacity: 0.8; }
-    .result-card.yt .result-label { color: var(--accent-yt); }
     .dl-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--accent-bright); background: var(--accent-dim); border: 1px solid rgba(45,212,191,0.2); border-radius: 7px; padding: 9px 16px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
     .dl-link:hover { background: rgba(45,212,191,0.18); border-color: rgba(45,212,191,0.4); }
-    .dl-link.yt-dl { color: var(--accent-yt); background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.2); }
-    .dl-link.yt-dl:hover { background: rgba(248,113,113,0.18); border-color: rgba(248,113,113,0.4); }
     .dl-link svg { width: 15px; height: 15px; flex-shrink: 0; }
     .footer { margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1.5rem; font-size: 11px; color: var(--muted); line-height: 1.8; }
   </style>
@@ -80,9 +69,7 @@
 <main class="container" role="main">
   <header style="margin-bottom:3rem;">
     <p class="eyebrow">IGX Downloader</p>
-    <h1 class="title">
-      <span class="insta">I</span><span class="i">G</span><span class="x">X</span>
-    </h1>
+    <h1 class="title"><span class="i">I</span><span class="g">G</span><span class="x">X</span></h1>
     <p class="subtitle"><span>Instagram</span> &middot; <span>Twitter / X</span></p>
     <div class="deco-line"></div>
     <p class="byline">by <span>engqusai</span> &mdash; no ads, no sign-in, public posts only</p>
@@ -91,10 +78,7 @@
   <div class="tabs" role="tablist">
     <button class="tab active" id="tab-instagram" onclick="setTab('instagram')">&#9679; Instagram</button>
     <button class="tab x-tab" id="tab-twitter" onclick="setTab('twitter')">&#9679; Twitter / X</button>
-
   </div>
-
-
 
   <div class="input-group">
     <input class="url-input" type="url" id="url-input" placeholder="https://www.instagram.com/reel/..." aria-label="Video URL" autocomplete="off" spellcheck="false" />
@@ -105,25 +89,20 @@
   <div id="results"></div>
 
   <footer class="footer">
-    <p>Independent downloader. No ads, no redirects. Supports public Instagram Reels, Twitter/X videos.</p>
+    <p>Independent downloader. No ads, no redirects. Supports public Instagram Reels and Twitter/X videos.</p>
   </footer>
 </main>
 
 <script>
   let currentTab = 'instagram';
 
-  const placeholders = {
-    instagram: 'https://www.instagram.com/reel/...',
-    twitter: 'https://twitter.com/... or https://x.com/...',
-    youtube: 'https://www.youtube.com/watch?v=... or https://youtu.be/...'
-  };
-
   function setTab(tab) {
     currentTab = tab;
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('active');
-    document.getElementById('url-input').placeholder = placeholders[tab];
-    document.getElementById('yt-options').className = tab === 'youtube' ? 'yt-options visible' : 'yt-options';
+    document.getElementById('url-input').placeholder = tab === 'instagram'
+      ? 'https://www.instagram.com/reel/...'
+      : 'https://twitter.com/... or https://x.com/...';
     setStatus('');
     document.getElementById('results').innerHTML = '';
   }
@@ -153,9 +132,6 @@
       return;
     }
 
-    const isAudioOnly = isYoutube && document.getElementById('yt-audio').value === 'true';
-    const quality = isYoutube ? document.getElementById('yt-quality').value : 'max';
-
     document.getElementById('results').innerHTML = '';
     document.getElementById('dl-btn').disabled = true;
     setStatus('Fetching download link&hellip;', 'loading');
@@ -168,12 +144,10 @@
       });
 
       const data = await res.json();
-      console.log('API response:', JSON.stringify(data));
       document.getElementById('dl-btn').disabled = false;
 
-      if (data.status === 'error') {
-        const msg = data.error?.code || data.error || data.text || 'Could not fetch. Post may be private or age-restricted.';
-        setStatus(typeof msg === 'object' ? JSON.stringify(msg) : msg, 'error');
+      if (data.error || data.status === 'error') {
+        setStatus(data.error || data.text || 'Could not fetch. Post may be private.', 'error');
         return;
       }
 
@@ -181,19 +155,18 @@
       const platform = isInstagram ? 'Instagram' : 'Twitter / X';
 
       if (data.status === 'tunnel' || data.status === 'redirect' || data.status === 'stream') {
-        const label = isAudioOnly ? 'Download audio (MP3)' : 'Download video';
         document.getElementById('results').innerHTML = `
-          <div class="result-card ${isYoutube ? 'yt' : ''}">
+          <div class="result-card">
             <p class="result-label">${platform} &mdash; ready</p>
-            <a class="dl-link ${isYoutube ? 'yt-dl' : ''}" href="${data.url}" target="_blank" rel="noopener noreferrer">
-              ${dlIcon()} ${label}
+            <a class="dl-link" href="${data.url}" target="_blank" rel="noopener noreferrer">
+              ${dlIcon()} Download video
             </a>
           </div>`;
       } else if (data.status === 'picker') {
         document.getElementById('results').innerHTML = data.picker.map((item, i) => `
-          <div class="result-card ${isYoutube ? 'yt' : ''}">
+          <div class="result-card">
             <p class="result-label">${platform} &mdash; ${item.type === 'photo' ? 'Image' : 'Video'} ${i + 1} of ${data.picker.length}</p>
-            <a class="dl-link ${isYoutube ? 'yt-dl' : ''}" href="${item.url}" target="_blank" rel="noopener noreferrer">
+            <a class="dl-link" href="${item.url}" target="_blank" rel="noopener noreferrer">
               ${dlIcon()} Download ${item.type === 'photo' ? 'image' : 'clip'}
             </a>
           </div>`).join('');
