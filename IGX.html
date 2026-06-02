@@ -91,24 +91,10 @@
   <div class="tabs" role="tablist">
     <button class="tab active" id="tab-instagram" onclick="setTab('instagram')">&#9679; Instagram</button>
     <button class="tab x-tab" id="tab-twitter" onclick="setTab('twitter')">&#9679; Twitter / X</button>
-    <button class="tab yt-tab" id="tab-youtube" onclick="setTab('youtube')">&#9679; YouTube</button>
+
   </div>
 
-  <div class="yt-options" id="yt-options">
-    <label>Quality:</label>
-    <select id="yt-quality">
-      <option value="max">Best available</option>
-      <option value="1080">1080p</option>
-      <option value="720">720p</option>
-      <option value="480">480p</option>
-      <option value="360">360p</option>
-    </select>
-    <label style="margin-left:8px;">Audio only:</label>
-    <select id="yt-audio">
-      <option value="false">No — video + audio</option>
-      <option value="true">Yes — MP3 only</option>
-    </select>
-  </div>
+
 
   <div class="input-group">
     <input class="url-input" type="url" id="url-input" placeholder="https://www.instagram.com/reel/..." aria-label="Video URL" autocomplete="off" spellcheck="false" />
@@ -161,10 +147,9 @@
 
     const isInstagram = url.includes('instagram.com');
     const isTwitter = url.includes('twitter.com') || url.includes('x.com');
-    const isYoutube = url.includes('youtube.com') || url.includes('youtu.be');
 
-    if (!isInstagram && !isTwitter && !isYoutube) {
-      setStatus('Not recognized — use an Instagram, Twitter/X, or YouTube link.', 'error');
+    if (!isInstagram && !isTwitter) {
+      setStatus('Not recognized — use an Instagram or Twitter/X link.', 'error');
       return;
     }
 
@@ -179,7 +164,7 @@
       const res = await fetch('https://ytix-downloader-e3c4dubqgjcxfvdr.westus-01.azurewebsites.net/api/download', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, vQuality: quality, isAudioOnly })
+        body: JSON.stringify({ url })
       });
 
       const data = await res.json();
@@ -193,7 +178,7 @@
       }
 
       setStatus('');
-      const platform = isInstagram ? 'Instagram' : isTwitter ? 'Twitter / X' : 'YouTube';
+      const platform = isInstagram ? 'Instagram' : 'Twitter / X';
 
       if (data.status === 'tunnel' || data.status === 'redirect' || data.status === 'stream') {
         const label = isAudioOnly ? 'Download audio (MP3)' : 'Download video';
