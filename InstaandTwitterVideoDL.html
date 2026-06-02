@@ -3,263 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Insta &amp; Twitter Video Downloader</title>
+  <title>Insta & Twitter Video Downloader</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0a0a0a;
-      --surface: #141414;
-      --surface2: #1e1e1e;
-      --border: rgba(255,255,255,0.08);
-      --border-hover: rgba(255,255,255,0.18);
-      --text: #f0ece4;
-      --muted: #888480;
-      --accent-insta: #e1306c;
-      --accent-x: #e8e4dc;
-      --accent-glow: rgba(225, 48, 108, 0.18);
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1e2530;
+      --border: rgba(99,230,214,0.1);
+      --border-hover: rgba(99,230,214,0.28);
+      --text: #e6f4f1;
+      --muted: #6b8f8a;
+      --accent: #2dd4bf;
+      --accent-bright: #5eead4;
+      --accent-dim: rgba(45,212,191,0.12);
+      --accent-x: #67e8f9;
       --font-display: 'Syne', sans-serif;
       --font-mono: 'DM Mono', monospace;
     }
+    html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: var(--font-mono); font-size: 14px; line-height: 1.6; }
+    body { display: flex; flex-direction: column; align-items: center; padding: 4rem 1.5rem 6rem; }
+    .container { width: 100%; max-width: 600px; }
 
-    html, body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 4rem 1.5rem 6rem;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 600px;
-    }
-
-    /* Header */
-    .header {
-      margin-bottom: 3rem;
-      text-align: left;
-    }
-
-    .eyebrow {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .title {
-      font-family: var(--font-display);
-      font-size: clamp(32px, 8vw, 52px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-
-    .title .insta { color: var(--accent-insta); }
+    .eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; opacity: 0.8; }
+    .title { font-family: var(--font-display); font-size: clamp(36px, 9vw, 56px); font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; }
+    .title .insta { color: var(--accent-bright); }
     .title .x { color: var(--accent-x); }
+    .byline { margin-top: 16px; font-size: 12px; color: var(--muted); letter-spacing: 0.06em; }
+    .byline span { color: var(--accent-bright); font-weight: 500; }
 
-    .byline {
-      margin-top: 14px;
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-    }
+    .deco-line { width: 40px; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); border-radius: 2px; margin: 1.5rem 0; }
 
-    .byline span {
-      color: var(--text);
-      font-weight: 500;
-    }
+    .tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .tab { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; padding: 9px 18px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer; transition: color 0.2s, border-color 0.2s; margin-bottom: -1px; text-transform: uppercase; }
+    .tab:hover { color: var(--accent-bright); }
+    .tab.active { color: var(--accent-bright); border-bottom-color: var(--accent); }
+    .tab.active.x-tab { color: var(--accent-x); border-bottom-color: var(--accent-x); }
 
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 1.5rem;
-      border-bottom: 0.5px solid var(--border);
-      padding-bottom: 0;
-    }
-
-    .tab {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      padding: 8px 16px;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--muted);
-      cursor: pointer;
-      transition: color 0.15s, border-color 0.15s;
-      margin-bottom: -0.5px;
-      text-transform: uppercase;
-    }
-
-    .tab:hover { color: var(--text); }
-    .tab.active.insta { color: var(--accent-insta); border-bottom-color: var(--accent-insta); }
-    .tab.active.x { color: var(--accent-x); border-bottom-color: var(--accent-x); }
-
-    /* Input area */
-    .input-group {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .url-input {
-      flex: 1;
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 13px;
-      padding: 11px 14px;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
+    .input-group { display: flex; gap: 8px; margin-bottom: 1rem; }
+    .url-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-mono); font-size: 13px; padding: 12px 16px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
     .url-input::placeholder { color: var(--muted); }
-    .url-input:focus { border-color: var(--border-hover); }
+    .url-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(45,212,191,0.08); }
 
-    .fetch-btn {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: var(--text);
-      color: var(--bg);
-      border: none;
-      border-radius: 6px;
-      padding: 11px 20px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: opacity 0.15s, transform 0.1s;
-    }
-
-    .fetch-btn:hover { opacity: 0.88; }
+    .fetch-btn { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; background: var(--accent); color: #0d1117; border: none; border-radius: 8px; padding: 12px 22px; cursor: pointer; white-space: nowrap; transition: background 0.2s, transform 0.1s; }
+    .fetch-btn:hover { background: var(--accent-bright); }
     .fetch-btn:active { transform: scale(0.97); }
+    .fetch-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
-    /* Status */
-    .status {
-      display: none;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-      align-items: center;
-      gap: 8px;
-    }
-
+    .status { font-size: 12px; color: var(--muted); margin-bottom: 0.75rem; display: none; align-items: center; gap: 8px; }
     .status.visible { display: flex; }
-    .status.error { color: #f06060; }
-    .status.success { color: #6fcf7a; }
+    .status.error { color: #f87171; }
+    .status.success { color: var(--accent-bright); }
 
-    .spinner {
-      width: 13px;
-      height: 13px;
-      border: 1.5px solid rgba(255,255,255,0.15);
-      border-top-color: var(--text);
-      border-radius: 50%;
-      animation: spin 0.55s linear infinite;
-      flex-shrink: 0;
-    }
-
+    .spinner { width: 13px; height: 13px; border: 1.5px solid rgba(45,212,191,0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.55s linear infinite; flex-shrink: 0; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Result card */
-    .result-card {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: 8px;
-      padding: 1.1rem 1.25rem;
-      margin-bottom: 0.75rem;
-      animation: fadeUp 0.25s ease;
-    }
+    .result-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; margin-bottom: 0.75rem; animation: fadeUp 0.25s ease; position: relative; overflow: hidden; }
+    .result-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-x)); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .result-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; opacity: 0.8; }
+    .dl-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--accent-bright); background: var(--accent-dim); border: 1px solid rgba(45,212,191,0.2); border-radius: 7px; padding: 9px 16px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+    .dl-link:hover { background: rgba(45,212,191,0.18); border-color: rgba(45,212,191,0.4); }
+    .dl-link svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-    .result-label {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .dl-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text);
-      background: var(--surface2);
-      border: 0.5px solid var(--border-hover);
-      border-radius: 6px;
-      padding: 9px 16px;
-      text-decoration: none;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
-    .dl-link:hover {
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(255,255,255,0.28);
-    }
-
-    .dl-link svg {
-      width: 15px;
-      height: 15px;
-      flex-shrink: 0;
-    }
-
-    /* Footer */
-    .footer {
-      margin-top: 3rem;
-      border-top: 0.5px solid var(--border);
-      padding-top: 1.5rem;
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .footer a { color: var(--muted); text-underline-offset: 3px; }
-    .footer a:hover { color: var(--text); }
-
-    /* Divider line decoration */
-    .deco-line {
-      width: 32px;
-      height: 2px;
-      background: var(--accent-insta);
-      border-radius: 2px;
-      margin: 1.5rem 0;
-    }
+    .footer { margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1.5rem; font-size: 11px; color: var(--muted); line-height: 1.8; }
   </style>
 </head>
 <body>
-
 <main class="container" role="main">
-  <header class="header">
+  <header style="margin-bottom:3rem;">
     <p class="eyebrow">XandInsta Downloader</p>
     <h1 class="title">
       <span class="insta">Insta</span> &amp;<br>
@@ -270,29 +86,21 @@
     <p class="byline">by <span>engqusai</span> &mdash; no ads, no sign-in, public posts only</p>
   </header>
 
-  <div class="tabs" role="tablist" aria-label="Select platform">
-    <button class="tab active insta" role="tab" aria-selected="true" id="tab-instagram" onclick="setTab('instagram')">&#9679; Instagram</button>
-    <button class="tab x" role="tab" aria-selected="false" id="tab-twitter" onclick="setTab('twitter')">&#9679; Twitter / X</button>
+  <div class="tabs" role="tablist">
+    <button class="tab active" id="tab-instagram" onclick="setTab('instagram')">&#9679; Instagram</button>
+    <button class="tab x-tab" id="tab-twitter" onclick="setTab('twitter')">&#9679; Twitter / X</button>
   </div>
 
   <div class="input-group">
-    <input
-      class="url-input"
-      type="url"
-      id="url-input"
-      placeholder="https://www.instagram.com/reel/..."
-      aria-label="Video URL"
-      autocomplete="off"
-      spellcheck="false"
-    />
-    <button class="fetch-btn" onclick="fetchVideo()" aria-label="Get download link">Get link &rarr;</button>
+    <input class="url-input" type="url" id="url-input" placeholder="https://www.instagram.com/reel/..." aria-label="Video URL" autocomplete="off" spellcheck="false" />
+    <button class="fetch-btn" id="dl-btn" onclick="fetchVideo()">Download &#8595;</button>
   </div>
 
   <div class="status" id="status" role="status" aria-live="polite"></div>
   <div id="results"></div>
 
   <footer class="footer">
-    <p>Powered by <a href="https://cobalt.tools" target="_blank" rel="noopener">Cobalt</a> &mdash; free &amp; open-source. Works with public posts. Reels, video posts, and carousels supported. Twitter/X video tweets supported.</p>
+    <p>Independent downloader. No ads, no redirects. Works with public Instagram Reels and Twitter/X video posts.</p>
   </footer>
 </main>
 
@@ -301,19 +109,12 @@
 
   function setTab(tab) {
     currentTab = tab;
-    const placeholders = {
-      instagram: 'https://www.instagram.com/reel/...',
-      twitter: 'https://twitter.com/... or https://x.com/...'
-    };
-    document.querySelectorAll('.tab').forEach(t => {
-      t.classList.remove('active');
-      t.setAttribute('aria-selected', 'false');
-    });
-    const active = document.getElementById('tab-' + tab);
-    active.classList.add('active');
-    active.setAttribute('aria-selected', 'true');
-    document.getElementById('url-input').placeholder = placeholders[tab];
-    setStatus('', '');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('url-input').placeholder = tab === 'instagram'
+      ? 'https://www.instagram.com/reel/...'
+      : 'https://twitter.com/... or https://x.com/...';
+    setStatus('');
     document.getElementById('results').innerHTML = '';
   }
 
@@ -326,6 +127,10 @@
       : msg;
   }
 
+  function dlIcon() {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+  }
+
   async function fetchVideo() {
     const url = document.getElementById('url-input').value.trim();
     if (!url) { setStatus('Paste a URL first.', 'error'); return; }
@@ -334,62 +139,54 @@
     const isTwitter = url.includes('twitter.com') || url.includes('x.com');
 
     if (!isInstagram && !isTwitter) {
-      setStatus('Not recognized &mdash; use an Instagram or Twitter/X link.', 'error');
+      setStatus('Not recognized — use an Instagram or Twitter/X link.', 'error');
       return;
     }
 
     document.getElementById('results').innerHTML = '';
-    setStatus('Fetching&hellip;', 'loading');
+    document.getElementById('dl-btn').disabled = true;
+    setStatus('Fetching download link&hellip;', 'loading');
 
     try {
-      const cobaltUrl = 'https://api.cobalt.tools/api/json';
-      const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(cobaltUrl);
-      const res = await fetch(proxyUrl, {
+      const res = await fetch('/api/download', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ url, vCodec: 'h264', vQuality: 'max', isAudioOnly: false })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
       });
 
       const data = await res.json();
+      document.getElementById('dl-btn').disabled = false;
 
-      if (data.status === 'error' || data.status === 'rate-limit') {
-        setStatus(data.text || 'Could not fetch. The post may be private or unsupported.', 'error');
+      if (data.error || data.status === 'error') {
+        setStatus(data.error || data.text || 'Could not fetch. Post may be private.', 'error');
         return;
       }
 
-      setStatus('', '');
-      renderResult(data, url);
+      setStatus('');
+      const platform = isInstagram ? 'Instagram' : 'Twitter / X';
+
+      if (data.status === 'stream' || data.status === 'redirect') {
+        document.getElementById('results').innerHTML = `
+          <div class="result-card">
+            <p class="result-label">${platform} &mdash; ready</p>
+            <a class="dl-link" href="${data.url}" target="_blank" rel="noopener noreferrer">
+              ${dlIcon()} Download video
+            </a>
+          </div>`;
+      } else if (data.status === 'picker') {
+        document.getElementById('results').innerHTML = data.picker.map((item, i) => `
+          <div class="result-card">
+            <p class="result-label">${platform} &mdash; ${item.type === 'photo' ? 'Image' : 'Video'} ${i + 1} of ${data.picker.length}</p>
+            <a class="dl-link" href="${item.url}" target="_blank" rel="noopener noreferrer">
+              ${dlIcon()} Download ${item.type === 'photo' ? 'image' : 'clip'}
+            </a>
+          </div>`).join('');
+      } else {
+        setStatus('Unexpected response. Content may not be downloadable.', 'error');
+      }
     } catch (e) {
+      document.getElementById('dl-btn').disabled = false;
       setStatus('Network error. Try again in a moment.', 'error');
-    }
-  }
-
-  function dlIcon() {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
-  }
-
-  function renderResult(data, originalUrl) {
-    const container = document.getElementById('results');
-    const platform = originalUrl.includes('instagram.com') ? 'Instagram' : 'Twitter / X';
-
-    if (data.status === 'stream' || data.status === 'redirect') {
-      container.innerHTML = `
-        <div class="result-card">
-          <p class="result-label">${platform} &mdash; ready to download</p>
-          <a class="dl-link" href="${data.url}" target="_blank" rel="noopener noreferrer">
-            ${dlIcon()} Download video
-          </a>
-        </div>`;
-    } else if (data.status === 'picker') {
-      container.innerHTML = data.picker.map((item, i) => `
-        <div class="result-card">
-          <p class="result-label">${platform} &mdash; ${item.type === 'photo' ? 'Image' : 'Video'} ${i + 1} of ${data.picker.length}</p>
-          <a class="dl-link" href="${item.url}" target="_blank" rel="noopener noreferrer">
-            ${dlIcon()} Download ${item.type === 'photo' ? 'image' : 'clip'}
-          </a>
-        </div>`).join('');
-    } else {
-      setStatus('Unexpected response. Content may not be downloadable.', 'error');
     }
   }
 
